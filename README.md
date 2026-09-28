@@ -11,7 +11,6 @@ A Python/SQLite desktop application in development for a small Philippine chicke
 Install Python 3.12+ with Tkinter, then in PowerShell:
 
 ```powershell
-cd chicken_pos
 python app.py
 ```
 
@@ -20,7 +19,6 @@ The prototype database is created at `%USERPROFILE%\ChickenPOS\shop.sqlite3`. Fo
 ## Tests
 
 ```powershell
-cd chicken_pos
 python -m unittest discover -s tests -v
 ```
 
