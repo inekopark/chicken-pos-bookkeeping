@@ -66,8 +66,29 @@ def close():
     if not shift.get(): messagebox.showerror('Shift','Open a shift first'); return
     form('Close shift',[('Cash counted (PHP)',''),('Remitted (PHP)',''),('Received by','')],save)
 
+def add_product():
+    def save(v):
+        product_id = store.product(v['SKU'], v['Name'], v['Unit'], v['Retail PHP'], v['Wholesale PHP'])
+        return f'Product #{product_id} saved'
+    form('Product', [('SKU',''), ('Name',''), ('Unit','kg'),
+                     ('Retail PHP',''), ('Wholesale PHP','')], save)
+
+def add_supplier():
+    form('Supplier', [('Name','')],
+         lambda v: f'Supplier #{store.party("suppliers", v["Name"])} saved')
+
+def add_customer():
+    form('Customer', [('Name','')],
+         lambda v: f'Customer #{store.party("customers", v["Name"])} saved')
+
 buttons=ttk.Frame(frame); buttons.pack(fill='x',pady=10)
-for label,cmd in [('Add product',lambda: form('Product',[('SKU',''),('Name',''),('Unit','kg'),('Retail PHP',''),('Wholesale PHP','')],lambda v: f'Product #{store.product(v["SKU"],v["Name"],v["Unit"],v["Retail PHP"],v["Wholesale PHP"])} saved'))),('Add supplier',lambda: form('Supplier',[('Name','')],lambda v: f'Supplier #{store.party("suppliers",v["Name"])} saved')),('Add customer',lambda: form('Customer',[('Name','')],lambda v: f'Customer #{store.party("customers",v["Name"])} saved')),('Open shift',open_shift),('Sale',sale),('Delivery',purchase),('Expense',expense),('Close shift',close)]:
+actions = [
+    ('Add product', add_product), ('Add supplier', add_supplier),
+    ('Add customer', add_customer), ('Open shift', open_shift),
+    ('Sale', sale), ('Delivery', purchase), ('Expense', expense),
+    ('Close shift', close),
+]
+for label,cmd in actions:
     ttk.Button(buttons,text=label,command=cmd).pack(side='left',padx=2,pady=3)
 listing=ttk.Treeview(frame,columns=('ID','Product','Unit','Stock','Value PHP','Retail PHP'),show='headings',height=15)
 for col in listing['columns']: listing.heading(col,text=col); listing.column(col,width=100)
